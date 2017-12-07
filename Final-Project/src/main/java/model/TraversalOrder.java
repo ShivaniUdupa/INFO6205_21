@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -7,11 +8,24 @@ import java.util.stream.IntStream;
 /**
  * Created by deveshkandpal on 12/6/17.
  */
-public class TraversalOrder implements Comparable<TraversalOrder> {
+public class TraversalOrder {
     private int memberId;
     private List<City> traversalOrder;
     private double distance;
     private double fitnessScore;
+
+    public TraversalOrder(int memberId) {
+        this.memberId = memberId;
+        this.traversalOrder = new ArrayList<>();
+    }
+
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
 
     public TraversalOrder(List<City> traversalOrder) {
         this.traversalOrder = traversalOrder;
@@ -59,10 +73,6 @@ public class TraversalOrder implements Comparable<TraversalOrder> {
         return sb.toString();
     }
 
-    public int compareTo(TraversalOrder other) {
-
-        return other.fitnessScore < this.fitnessScore ? 1 : (other.fitnessScore == this.fitnessScore ? 0 : -1);
-    }
 
     public void computeFitnessScore() {
 
@@ -71,6 +81,8 @@ public class TraversalOrder implements Comparable<TraversalOrder> {
                 .sum();
 
         this.fitnessScore = 1 / this.distance;
+        //System.out.println("Genotype :" + this.memberId + " has fitness score :" + this.fitnessScore);
+
     }
 
     public double computeDistance(int iter) {
@@ -85,7 +97,6 @@ public class TraversalOrder implements Comparable<TraversalOrder> {
             second = this.traversalOrder.get(0);
         }
         double distance = pairWiseDistance(first, second);
-        System.out.println("Computed Distance for iter :" + iter + " " + distance);
         return distance;
     }
 
