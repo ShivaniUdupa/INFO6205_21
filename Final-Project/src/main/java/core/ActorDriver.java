@@ -1,45 +1,67 @@
 package core;
 
+import actors.MasterActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 import model.City;
-import model.Population;
 import udf.Trifunction;
 import udf.UserDefinedFunction;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 /**
- * Created by deveshkandpal on 12/5/17.
+ * Created by deveshkandpal on 12/9/17.
  */
-public class Driver {
+public class ActorDriver {
 
-    public static void main(String[] args) {
-        String[] bag = {"A", "B"};
-        int phenoTypeLength = 4;
-        int populationSize = 10;
-        int genoTypeLength = 8;
-        double cutoff = 0.1;
+    public static void main(String[] args) throws Exception {
+
+
+        String[] geneExprBag = {"A","B"};
+        int phenoTypeLength = 50;
+        int populationSize = 1000;
+        int genoTypeLength = 10;
+        double cutoff = 0.2;
 
         Map<String, UserDefinedFunction> geneExprMapping = getGeneExprMapping();
         List<City> baseOrder = getBaseOrder(phenoTypeLength);
-        Population population = new Population(cutoff, geneExprMapping, baseOrder);
-        population.initPopulation(populationSize,
-                genoTypeLength,phenoTypeLength, bag);
-        population.sortPopulation();
-        System.out.println("Generation 0"  + " fitness score :" + population.getGtList().get(0).getPhenotype().toString());
-        IntStream.range(1,11)
-                .forEach(generationNo -> {
-                    population.regenerationAndCulling();
-                    population.sortPopulation();
-                    System.out.println("Generation " +generationNo  + " fitness score :" + population.getGtList().get(0).getPhenotype().toString());
-                });
+        int stopGeneration = 10;
+
+
+        final ActorSystem system = ActorSystem.create("GaSystem");
+
+        try {
+        final ActorRef masterActor =
+                system.actorOf(MasterActor.props(
+                        geneExprBag , phenoTypeLength , populationSize,genoTypeLength ,
+                        cutoff,geneExprMapping,baseOrder,stopGeneration),
+                        "MasterActor");
+
+        masterActor.tell(new MasterActor.Init(), ActorRef.noSender());
+
+       // System.out.println(">>> Press ENTER to exit <<<");
+        //System.in.read();
+
+        } catch (Exception ioe) {
+
+        } finally {
+
+            //system.terminate();
+        }
+
+
+
+
 
     }
+
 
     public static List<City> getBaseOrder(int phenoTypeLength) {
         Random r = new Random();
@@ -89,13 +111,6 @@ public class Driver {
         return geneExprMapping;
 
     }
-
-
-
-
-
-
-
 
 
 
