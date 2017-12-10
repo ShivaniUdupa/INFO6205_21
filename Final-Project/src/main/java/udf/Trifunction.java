@@ -9,7 +9,7 @@ import java.util.function.Function;
  * Java supports only function and bifunction
  * TriFunction is a custom functional interface
  * that defines an apply method which accepts
- * 3 arguments A,B,C and return R
+ * 3 arguments A,B,C and returns an object of type R
  *
  */
 @FunctionalInterface
