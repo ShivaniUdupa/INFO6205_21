@@ -19,5 +19,5 @@
 build/**/*
 .gradle/**/*
 *.jar
-
+.metadata
 
