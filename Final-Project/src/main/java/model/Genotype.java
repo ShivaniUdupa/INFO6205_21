@@ -49,8 +49,6 @@ public class Genotype implements Comparable<Genotype> {
         // compute fitness and complete rest of the stuff
         this.phenotype.computeFitnessScore();
 
-
-
     }
 
     public void transformation(int startIndex, int endIndex, List<City> baseOrder, Map<String, UserDefinedFunction> geneExprMapping) {

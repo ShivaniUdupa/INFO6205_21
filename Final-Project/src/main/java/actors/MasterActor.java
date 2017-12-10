@@ -8,12 +8,15 @@ import model.Genotype;
 import udf.UserDefinedFunction;
 
 import java.util.*;
+import org.apache.log4j.Logger;
 import java.util.stream.IntStream;
 
 /**
  * Created by deveshkandpal on 12/8/17.
  */
 public class MasterActor extends AbstractActor {
+
+    final static Logger logger = Logger.getLogger(MasterActor.class);
 
     static public Props props(String[] geneExprBag , int phenoTypeLength ,
                               int populationSize,
@@ -59,6 +62,9 @@ public class MasterActor extends AbstractActor {
     private List<Genotype> resultGenotypes;
     private final int stopGeneration;
     private int currentGeneration = 0;
+
+
+
     // constructor for master
     public MasterActor(int phenoTypeLength, int populationSize,
                        int genoTypeLength, double cutoff,
@@ -77,12 +83,16 @@ public class MasterActor extends AbstractActor {
         this.gtList = new ArrayList<>();
         this.stopGeneration = stopGeneration;
         this.resultGenotypes = new ArrayList<>();
+
+
     }
 
     @Override
     public Receive createReceive() {
+
         return receiveBuilder().match(Init.class, init -> {
-           // System.out.println("Received Init Message");
+            logger.info("Master Actor created : " + self());
+            logger.info("Initializing Process");
             executeInitLogic();
         }).match(Result.class, result -> {
             executeResultLogic(result.genotype);
@@ -92,12 +102,15 @@ public class MasterActor extends AbstractActor {
     private void executeResultLogic(Genotype genotype) {
             this.resultGenotypes.add(genotype);
             if(this.resultGenotypes.size() == this.populationSize) {
-                System.out.println("All Results received for generation :" + this.currentGeneration);
+                logger.info("All Results received for generation :" + this.currentGeneration);
                 Collections.sort(this.resultGenotypes, this.genoTypeComparator);
+                logger.info("Sorting Results for generation " + this.currentGeneration);
+                logger.info("Generation " +this.currentGeneration  + " best distance computed :" + this.resultGenotypes.get(0).getPhenotype().getDistance());
+
                 this.currentGeneration++;
-                System.out.println("Generation " +this.currentGeneration  + " fitness score :" + this.resultGenotypes.get(0).getPhenotype().getFitnessScore());
                 if(this.currentGeneration <= this.stopGeneration) {
                     // spawn and regn
+                    logger.info("Spawning next generation");
                     this.gtList = new ArrayList<>();
                     this.resultGenotypes.stream().forEach(obj -> gtList.add(obj));
                     this.resultGenotypes.clear();
@@ -113,7 +126,8 @@ public class MasterActor extends AbstractActor {
 
 
                 } else {
-                    System.out.println("Completed " + this.currentGeneration + ". Time to terminate");
+                    logger.info("Completed Time to terminate");
+
                     context().stop(getSelf());
                     context().system().terminate();
                 }
@@ -130,12 +144,13 @@ public class MasterActor extends AbstractActor {
             Map<String, UserDefinedFunction> geneExprMapping,
             int phenoTypeLength,
             List<City> baseOrder) {
-
+        logger.info("Executing Regeneration for generation :" + this.currentGeneration);
         IntStream.range(0, this.populationSize)
                 .forEach(index -> {
                     List<City> newBaseOrder = new ArrayList<>();
                     baseOrder.stream().forEach(bo -> newBaseOrder.add(bo));
-                    ActorRef child = getContext().actorOf(Props.create(WorkerActor.class),"Generation-"+this.currentGeneration+"Child-"+index);
+                    //ActorRef child = getContext().actorOf(Props.create(WorkerActor.class),"Generation-"+this.currentGeneration+"Child-"+index);
+                    ActorRef child = getContext().actorOf(WorkerActor.props(), "Generation-"+this.currentGeneration+"-Child-"+index);
                     WorkerActor.RegenerateGenotype message =
                             new WorkerActor.RegenerateGenotype(upperBound,
                                                     parentGeneration,
@@ -152,12 +167,13 @@ public class MasterActor extends AbstractActor {
     }
 
     private void executeInitLogic() {
+        logger.info("Spawning Children for creating Generation 0");
         IntStream.range(0, this.populationSize)
                 .forEach(index -> {
 
                     List<City> newBaseOrder = new ArrayList<>();
                     baseOrder.stream().forEach(bo -> newBaseOrder.add(bo));
-                    ActorRef child = getContext().actorOf(Props.create(WorkerActor.class),"Generation-"+this.currentGeneration+"Child-"+index);
+                    ActorRef child = getContext().actorOf(WorkerActor.props(),"Generation-"+this.currentGeneration+"-Child-"+index);
                     WorkerActor.CreateGenotype message =
                             new WorkerActor.CreateGenotype(index, genoTypeLength,
                                     geneExprMapping,

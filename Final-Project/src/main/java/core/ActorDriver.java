@@ -25,9 +25,9 @@ public class ActorDriver {
 
 
         String[] geneExprBag = {"A","B"};
-        int phenoTypeLength = 50;
-        int populationSize = 1000;
-        int genoTypeLength = 10;
+        int phenoTypeLength = 6;
+        int populationSize = (6 * 5  * 3 * 2);
+        int genoTypeLength = 6;
         double cutoff = 0.2;
 
         Map<String, UserDefinedFunction> geneExprMapping = getGeneExprMapping();
@@ -37,7 +37,6 @@ public class ActorDriver {
 
         final ActorSystem system = ActorSystem.create("GaSystem");
 
-        try {
         final ActorRef masterActor =
                 system.actorOf(MasterActor.props(
                         geneExprBag , phenoTypeLength , populationSize,genoTypeLength ,
@@ -45,18 +44,6 @@ public class ActorDriver {
                         "MasterActor");
 
         masterActor.tell(new MasterActor.Init(), ActorRef.noSender());
-
-       // System.out.println(">>> Press ENTER to exit <<<");
-        //System.in.read();
-
-        } catch (Exception ioe) {
-
-        } finally {
-
-            //system.terminate();
-        }
-
-
 
 
 
@@ -85,8 +72,6 @@ public class ActorDriver {
         Map<String, UserDefinedFunction> geneExprMapping = new HashMap<>();
 
         Trifunction<List<City>, Integer, Integer, List<City>> geneExprA = (newList, a, b) -> {
-            //List<City> newList = new ArrayList<>();
-            //to.stream().forEach(el -> newList.add(el));
             int indexToSwapWith = (a + 3 ) % newList.size();
             City temp = newList.get(b);
             newList.set(b, newList.get(indexToSwapWith));

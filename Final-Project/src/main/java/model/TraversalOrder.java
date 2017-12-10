@@ -76,7 +76,7 @@ public class TraversalOrder {
 
     public void computeFitnessScore() {
 
-        this.distance = IntStream.range(0, this.traversalOrder.size() - 1)
+        this.distance = IntStream.range(0, this.traversalOrder.size())
                 .mapToDouble(iter -> computeDistance(iter))
                 .sum();
 

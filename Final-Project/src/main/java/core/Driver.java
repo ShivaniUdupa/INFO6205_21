@@ -20,10 +20,10 @@ public class Driver {
 
     public static void main(String[] args) {
         String[] bag = {"A", "B"};
-        int phenoTypeLength = 4;
-        int populationSize = 10;
-        int genoTypeLength = 8;
-        double cutoff = 0.1;
+        int phenoTypeLength = 10;
+        int populationSize = 1000;
+        int genoTypeLength = 4;
+        double cutoff = 0.2;
 
         Map<String, UserDefinedFunction> geneExprMapping = getGeneExprMapping();
         List<City> baseOrder = getBaseOrder(phenoTypeLength);

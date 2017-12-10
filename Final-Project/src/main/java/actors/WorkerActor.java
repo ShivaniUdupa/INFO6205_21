@@ -1,9 +1,11 @@
 package actors;
 
 import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
 import akka.actor.Props;
 import model.City;
 import model.Genotype;
+import org.apache.log4j.Logger;
 import udf.UserDefinedFunction;
 
 import java.util.*;
@@ -14,12 +16,9 @@ import java.util.stream.IntStream;
  */
 public class WorkerActor extends AbstractActor {
 
-    static public Props props(String[] bag , int phenoTypeLength ,
-                              int populationSize,
-                              int genoTypeLength ,
-                              double cutoff,
-                              Map<String, UserDefinedFunction> geneExprMapping,
-                              List<City> baseOrder ) {
+    final static Logger logger = Logger.getLogger(WorkerActor.class);
+
+    static public Props props() {
         return Props.create(WorkerActor.class, () -> new WorkerActor());
     }
 
@@ -46,19 +45,10 @@ public class WorkerActor extends AbstractActor {
             this.geneExprBag = geneExprBag;
             this.baseOrder = baseOrder;
 
+
         }
 
-        @Override
-        public String toString() {
-            return "CreateGenotype{" +
-                    "memberId=" + memberId +
-                    ", genotypeLength=" + genotypeLength +
-                    ", geneExprMapping=" + geneExprMapping +
-                    ", phenoTypeLength=" + phenoTypeLength +
-                    ", geneExprBag=" + Arrays.toString(geneExprBag) +
-                    ", baseOrder=" + baseOrder +
-                    '}';
-        }
+
     }
 
     static public class RegenerateGenotype {
@@ -85,16 +75,7 @@ public class WorkerActor extends AbstractActor {
             this.baseOrder = baseOrder;
         }
 
-        @Override
-        public String toString() {
-            return "RegenerateGenotype{" +
-                    "upperBound=" + upperBound +
-                    ", parentGeneration=" + parentGeneration +
-                    ", memberId=" + memberId +
-                    ", geneExprMapping=" + geneExprMapping +
-                    ", baseOrder=" + baseOrder +
-                    '}';
-        }
+
     }
 
 
@@ -106,7 +87,8 @@ public class WorkerActor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder().match(CreateGenotype.class, request -> {
-           // System.out.println("Child Received Message : " + request.toString());
+
+            logger.info("Child Actor Received Message :" + self());
             Genotype genotype = executeCreateGenotype(request.memberId, request.genotypeLength,
                     request.phenoTypeLength, request.geneExprBag,
                     request.baseOrder,
@@ -116,12 +98,15 @@ public class WorkerActor extends AbstractActor {
             sender().tell(new MasterActor.Result(genotype), getSelf());
             context().stop(getSelf());
         }).match(RegenerateGenotype.class, request -> {
-           // System.out.println("Received request for regeneration :" + request.toString());
+
+           logger.info("Child Spawned : " +self());
             Genotype child = executeRegenerate(request.upperBound,
                     request.parentGeneration,
                     request.memberId,
                     request.geneExprMapping,
                     request.baseOrder);
+
+
 
             sender().tell(new MasterActor.Result(child), getSelf());
             context().stop(getSelf());
@@ -141,8 +126,14 @@ public class WorkerActor extends AbstractActor {
         while(firstParent == secondParent) {
             secondParent = getRandomParentIndex(upperBound, r);
         }
+        logger.debug("Creating Crossover child");
         Genotype child = crossover(firstParent, secondParent, memberId,
                 parentGeneration, geneExprMapping, baseOrder);
+        logger.debug("Created Genotype " + memberId);
+        logger.debug("Distance :" + child.getPhenotype().getDistance());
+        logger.debug("Fitness Score : " + child.getPhenotype().getFitnessScore());
+        logger.debug("Genotype Sequence :" + Arrays.toString(child.getRepresentation())
+                .replace("[","").replace("]","").replace(",",""));
         return child;
 
     }
@@ -161,6 +152,11 @@ public class WorkerActor extends AbstractActor {
 
         Genotype genoFirst = parentGeneration.get(firstParent);
         Genotype genoSecond = parentGeneration.get(secondParent);
+        logger.debug("Parent 1 Genotype Sequence :" + Arrays.toString(genoFirst.getRepresentation())
+                .replace("[","").replace("]","").replace(",",""));
+        logger.debug("Parent 2 Genotype Sequence :" + Arrays.toString(genoSecond.getRepresentation())
+                .replace("[","").replace("]","").replace(",",""));
+
         String[] childRepresentation = new String[genoFirst.getRepresentation().length];
         IntStream.range(0, childRepresentation.length)
                 .forEach(index -> {
@@ -201,7 +197,11 @@ public class WorkerActor extends AbstractActor {
         List<City> newBaseOrder = new ArrayList<>();
         baseOrder.stream().forEach(bo -> newBaseOrder.add(bo));
         genotype.generatePhenotype(geneExprMapping, newBaseOrder);
-
+        logger.debug("Created Genotype " + memberId);
+        logger.debug("Distance :" + genotype.getPhenotype().getDistance());
+        logger.debug("Fitness Score : " + genotype.getPhenotype().getFitnessScore());
+        logger.debug("Genotype Sequence :" + Arrays.toString(genotype.getRepresentation())
+                .replace("[","").replace("]","").replace(",",""));
         return genotype;
     }
 

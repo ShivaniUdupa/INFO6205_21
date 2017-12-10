@@ -110,7 +110,7 @@ public class Population {
 
     }
 
-    private Genotype crossover(int firstParent, int secondParent, int newMemberId) {
+    public Genotype crossover(int firstParent, int secondParent, int newMemberId) {
         Genotype genoFirst = this.gtList.get(firstParent);
         Genotype genoSecond = this.gtList.get(secondParent);
         String[] childRepresentation = new String[genoFirst.getRepresentation().length];
