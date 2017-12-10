@@ -63,6 +63,8 @@ public class MasterActor extends AbstractActor {
     private final int stopGeneration;
     private int currentGeneration = 0;
 
+    // do something about it
+    private Genotype bestResult;
 
 
     // constructor for master
@@ -140,6 +142,8 @@ public class MasterActor extends AbstractActor {
 
             }
     }
+
+
 
     private void executeRegeneration(
             int upperBound,
