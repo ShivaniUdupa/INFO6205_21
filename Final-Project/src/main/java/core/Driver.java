@@ -2,13 +2,11 @@ package core;
 
 import model.City;
 import model.Population;
-import udf.Trifunction;
+import udf.TriFunction;
 import udf.UserDefinedFunction;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,6 +39,12 @@ public class Driver {
 
     }
 
+    /*
+    *
+    * Creates random city objects. The total number of city
+    * objects created equals the phenoTypeLength
+    *
+    * */
     public static List<City> getBaseOrder(int phenoTypeLength) {
         Random r = new Random();
         double min = -100;
@@ -57,14 +61,19 @@ public class Driver {
     }
 
 
-
+    /*
+    *
+    * Creates a map of a gene sequence element which is mapped
+    * to a lambda function. The lambda function applies the
+    * shifting operation on the list and returns the new list.
+    *
+    * */
     public static Map<String, UserDefinedFunction> getGeneExprMapping() {
 
         Map<String, UserDefinedFunction> geneExprMapping = new HashMap<>();
 
-        Trifunction<List<City>, Integer, Integer, List<City>> geneExprA = (newList, a, b) -> {
-            //List<City> newList = new ArrayList<>();
-            //to.stream().forEach(el -> newList.add(el));
+        TriFunction<List<City>, Integer, Integer, List<City>> geneExprA = (newList, a, b) -> {
+
             int indexToSwapWith = (a + 3 ) % newList.size();
             City temp = newList.get(b);
             newList.set(b, newList.get(indexToSwapWith));
@@ -73,8 +82,7 @@ public class Driver {
         };
 
 
-
-        Trifunction<List<City>, Integer, Integer, List<City>> geneExprB = (newList, a, b) -> {
+        TriFunction<List<City>, Integer, Integer, List<City>> geneExprB = (newList, a, b) -> {
             int indexToSwapWith = (b + 7 ) % newList.size();
             City temp = newList.get(a);
             newList.set(a, newList.get(indexToSwapWith));

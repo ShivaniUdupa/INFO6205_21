@@ -18,6 +18,11 @@ public class MasterActor extends AbstractActor {
 
     final static Logger logger = Logger.getLogger(MasterActor.class);
 
+
+    /*
+    * Props method to initialize the MasterActor
+    *
+    * */
     static public Props props(String[] geneExprBag , int phenoTypeLength ,
                               int populationSize,
                               int genoTypeLength ,
@@ -31,7 +36,10 @@ public class MasterActor extends AbstractActor {
     }
 
 
-    // Messages this actor can handle
+    /*
+    * Messages that can be received by the MasterActor
+    *
+    * */
     static public class Init {
 
         public Init() {}
@@ -47,9 +55,12 @@ public class MasterActor extends AbstractActor {
     }
 
 
-    // Messages End
 
-    // attributes of master
+
+    /*Attributes of the MasterActor, population during
+    * MasterActor creation.
+    *
+    * */
 
     private final int phenoTypeLength;
     private final int populationSize;
@@ -62,12 +73,12 @@ public class MasterActor extends AbstractActor {
     private List<Genotype> resultGenotypes;
     private final int stopGeneration;
     private int currentGeneration = 0;
-
+    private int globalCounter = 0;
     // do something about it
     private Genotype bestResult;
 
 
-    // constructor for master
+
     public MasterActor(int phenoTypeLength, int populationSize,
                        int genoTypeLength, double cutoff,
                        Map<String, UserDefinedFunction> geneExprMapping,
@@ -89,22 +100,39 @@ public class MasterActor extends AbstractActor {
 
     }
 
+
+
+    /*
+    *
+    * Receive method override by MasterActor
+    * to handle incoming messages in it's mailbox
+    *
+    * */
     @Override
     public Receive createReceive() {
 
         return receiveBuilder().match(Init.class, init -> {
+
             logger.info("Master Actor created : " + self());
             logger.info("Initializing Process");
+
             executeInitLogic();
         }).match(Result.class, result -> {
             executeResultLogic(result.genotype);
         }).build();
     }
 
+    /*
+    * Genotype created and sent by the WorkerActor
+    * is received encapsulated in a Result object
+    *
+    * */
     private void executeResultLogic(Genotype genotype) {
             this.resultGenotypes.add(genotype);
             if(this.resultGenotypes.size() == this.populationSize) {
+
                 logger.debug("======================================");
+                logger.info("All Results received for iteration :" + this.globalCounter);
                 logger.info("All Results received for generation :" + this.currentGeneration);
                 logger.debug("======================================");
                 Collections.sort(this.resultGenotypes, this.genoTypeComparator);
@@ -112,10 +140,11 @@ public class MasterActor extends AbstractActor {
                 logger.debug("======================================");
                 logger.info("Generation " +this.currentGeneration  + " best distance computed :" + this.resultGenotypes.get(0).getPhenotype().getDistance());
                 logger.debug("======================================");
-                this.currentGeneration++;
+                validateResult(this.resultGenotypes.get(0));
+                //this.currentGeneration++;
                 if(this.currentGeneration <= this.stopGeneration) {
                     // spawn and regn
-                    logger.info("Spawning next generation");
+                    logger.debug("Spawning next generation");
                     this.gtList = new ArrayList<>();
                     this.resultGenotypes.stream().forEach(obj -> gtList.add(obj));
                     this.resultGenotypes.clear();
@@ -132,7 +161,11 @@ public class MasterActor extends AbstractActor {
 
                 } else {
                     logger.debug("======================================");
-                    logger.info("Completed Time to terminate");
+                    logger.info("Completed Processing Time to terminate");
+                    logger.info("Best Route :" + this.bestResult.getPhenotype().getTraversalOrder().toString());
+                    logger.info("Best Distance :" + this.bestResult.getPhenotype().getDistance());
+                    logger.info("Best Fitness :" + this.bestResult.getPhenotype().getFitnessScore());
+                    logger.info("Terminated after running :" + this.globalCounter + "iterations");
                     logger.debug("======================================");
 
                     context().stop(getSelf());
@@ -144,7 +177,30 @@ public class MasterActor extends AbstractActor {
     }
 
 
+    /*
+    *
+    * Validation function to see
+    * if we have a better solution or not
+    *
+    * */
+    private void validateResult(Genotype other) {
+        if(this.bestResult == null ||
+                other.getPhenotype().getDistance() < this.bestResult.getPhenotype().getDistance()) {
+            logger.debug("Found Best Result, Need to Check If Result Is Constant");
+            this.bestResult = other;
+            this.currentGeneration = 0;
 
+        }
+        this.globalCounter++;
+        this.currentGeneration++;
+
+    }
+
+    /*
+    * Spawns Worker Actors to generate next generation
+    * of genotypes using current generation (fittest 80% - 90%)
+    *
+    * */
     private void executeRegeneration(
             int upperBound,
             List<Genotype> parentGeneration,
@@ -177,6 +233,10 @@ public class MasterActor extends AbstractActor {
 
     }
 
+    /*
+    * Spawns WorkerActors to create first generation of genotypes
+    *
+    * */
     private void executeInitLogic() {
         logger.debug("======================================");
         logger.info("Spawning Children for creating Generation 0");
@@ -199,6 +259,11 @@ public class MasterActor extends AbstractActor {
     }
 
 
+    /*
+    * Comparator for comparing different genotypes and
+    * sorting them in descending order on basis of their fitness score
+    *
+    * */
     public Comparator<Genotype> genoTypeComparator
             = new Comparator<Genotype>() {
 

@@ -8,6 +8,9 @@ import java.util.stream.IntStream;
 
 /**
  * Created by deveshkandpal on 12/9/17.
+ *
+ * Utility class for getting base order of traversing cities.
+ * This is just needed for testing purpose
  */
 public class TestUtility {
 

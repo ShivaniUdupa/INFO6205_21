@@ -3,15 +3,11 @@ package model;
 import core.Driver;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Test;
-import udf.Trifunction;
 import udf.UserDefinedFunction;
 import utility.TestUtility;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -21,6 +17,10 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Created by deveshkandpal on 12/9/17.
+ * GenotypeTest class to validate all logic associated with a genotype
+ *such as phenotype mapping, distance calculation as well as calculation of fitness score
+ *
+ *
  */
 public class GenotypeTest {
 

@@ -16,19 +16,19 @@ public class Population {
     private Map<String, UserDefinedFunction> geneExprMapping;
     private List<City> baseOrder;
 
+
+    /*
+    *
+    * Comparator defined to compare and sort
+    * all genotypes in a population stored in
+    * gtList (genotypeList)
+    *
+    * */
     public Comparator<Genotype> genoTypeComparator
             = new Comparator<Genotype>() {
 
         public int compare(Genotype gA, Genotype gB) {
-
-            double fitnessA = gA.getPhenotype().getFitnessScore();
-            double fitnessB = gB.getPhenotype().getFitnessScore();
-
-            //ascending order
             return gB.compareTo(gA);
-
-            //descending order
-            //return fruitName2.compareTo(fruitName1);
         }
 
     };
@@ -50,6 +50,13 @@ public class Population {
         this.gtList = gtList;
     }
 
+
+    /*This takes a given population size, genotypeLength, phenotypeLength and
+    * a geneExprBag (an array to choose from different gene sequences A,B etc)
+    * and randomly creates the first generation of genotype population
+    * Thus each each genotype is characterised with a sequence that looks quite similar to :
+     * A 0 1 B 3 4 B 1 3 A 63
+    * */
     public void initPopulation(int populationSize, int genotypeLength,
                                 int phenoTypeLength,
                                 String[] geneExprBag) {
@@ -88,6 +95,17 @@ public class Population {
         Collections.sort(this.gtList, this.genoTypeComparator);
     }
 
+
+    /*
+    *
+    * This method takes 80% - 90% of the sorted
+    * genotype population from the current generation
+    * to create a new population of genotypes. The children
+    * created are created as a result of cross over of two randomly
+    * selected parents from the current generation
+    *
+    * */
+
     public void regenerationAndCulling() {
         Random r = new Random();
         int upperbound = (int)((1 - this.cutoff) * this.gtList.size());
@@ -110,6 +128,14 @@ public class Population {
 
     }
 
+
+    /*
+    *
+    * Given Parent1 Genotype and Parent2 Genotype, first half of the
+    * child gene sequence comes from Parent1 and the other half comes
+    * from Parent2
+    *
+    * */
     public Genotype crossover(int firstParent, int secondParent, int newMemberId) {
         Genotype genoFirst = this.gtList.get(firstParent);
         Genotype genoSecond = this.gtList.get(secondParent);

@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Created by deveshkandpal on 12/9/17.
+ * Test class to test creation of City objects
+ *
  */
 public class CityTest {
 

@@ -15,6 +15,10 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Created by deveshkandpal on 12/9/17.
+ *
+ * Test class for testing logic associated with creation of multiple genotypes
+ * that belong to the same population for a given generation. Sorting logic,
+ * best distance and best fitness score for the population is validated as well
  */
 public class PopulationTest {
 

@@ -7,14 +7,19 @@ import java.util.stream.IntStream;
 
 /**
  * Created by deveshkandpal on 12/6/17.
+ *
+ *
+ *
+ *
  */
-public class TraversalOrder {
+public class Phenotype {
+
     private int memberId;
     private List<City> traversalOrder;
     private double distance;
     private double fitnessScore;
 
-    public TraversalOrder(int memberId) {
+    public Phenotype(int memberId) {
         this.memberId = memberId;
         this.traversalOrder = new ArrayList<>();
     }
@@ -27,7 +32,7 @@ public class TraversalOrder {
         this.memberId = memberId;
     }
 
-    public TraversalOrder(List<City> traversalOrder) {
+    public Phenotype(List<City> traversalOrder) {
         this.traversalOrder = traversalOrder;
     }
 
@@ -73,7 +78,10 @@ public class TraversalOrder {
         return sb.toString();
     }
 
-
+    /*
+    * Compute Fitness does the summation of distances
+    * computed between cities as defined in the traversalOrder
+    * */
     public void computeFitnessScore() {
 
         this.distance = IntStream.range(0, this.traversalOrder.size())
@@ -85,6 +93,13 @@ public class TraversalOrder {
 
     }
 
+
+    /*
+    *
+    * ComputeDistance calculates the pariwise
+    * distance between two cities
+    *
+    * */
     public double computeDistance(int iter) {
 
         City first = this.traversalOrder.get(iter);
@@ -100,6 +115,12 @@ public class TraversalOrder {
         return distance;
     }
 
+    /*
+    * PairwiseDistance - given two cities,
+    * applies euclidean distance calculation
+    * formulate to (x1,y1) and (x2,y2)
+    *
+    * */
     public double pairWiseDistance(City first, City second) {
         return Math.sqrt(Math.pow(first.getX() - second.getX(), 2) + Math.pow(first.getY() - second.getY(), 2));
     }

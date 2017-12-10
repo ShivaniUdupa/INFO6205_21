@@ -13,16 +13,30 @@ import java.util.stream.IntStream;
 
 /**
  * Created by deveshkandpal on 12/9/17.
+ *
+ * If population size is N, then N WorkerActors are spawned to handle
+ * creation of N Genotypes, which would be mapped to a phenotype. Additionally,
+ * crossover, distance calculation and fitness score calculation for a given
+ * genotype is handled here
+ *
  */
 public class WorkerActor extends AbstractActor {
 
     final static Logger logger = Logger.getLogger(WorkerActor.class);
 
+
+    /*
+    * Props for initializing WorkerActor
+    *
+    * */
     static public Props props() {
         return Props.create(WorkerActor.class, () -> new WorkerActor());
     }
 
 
+    /*
+    * Messages that can be received by the WorkerActor
+    * */
     static public class CreateGenotype {
 
         public final int memberId;
@@ -79,11 +93,20 @@ public class WorkerActor extends AbstractActor {
     }
 
 
+    /*
+    WorkerActor Constructor
+    */
     public WorkerActor() {
 
     }
 
 
+    /*
+    *
+    * Receive method override by WorkerActor
+    * to handle incoming messages in it's mailbox
+    *
+    * */
     @Override
     public Receive createReceive() {
         return receiveBuilder().match(CreateGenotype.class, request -> {
@@ -116,6 +139,11 @@ public class WorkerActor extends AbstractActor {
         }).build();
     }
 
+    /*
+    * Handles crossover , distance computation and
+    * fitness score calculation for the newly created child genotype
+    *
+    * */
     private Genotype executeRegenerate(int upperBound,
                                        List<Genotype> parentGeneration,
                                        int memberId,
@@ -151,6 +179,13 @@ public class WorkerActor extends AbstractActor {
     }
 
 
+    /*
+    *
+    * Given Parent1 Genotype and Parent2 Genotype, first half of the
+    * child gene sequence comes from Parent1 and the other half comes
+    * from Parent2
+    *
+    * */
     private Genotype crossover(int firstParent, int secondParent, int memberId,
                                List<Genotype> parentGeneration,
                                Map<String, UserDefinedFunction> geneExprMapping,
@@ -182,6 +217,11 @@ public class WorkerActor extends AbstractActor {
     }
 
 
+    /*
+    *
+    * Handles creation of a genotype that belongs to first generation
+    *
+    * */
     private Genotype executeCreateGenotype(int memberId, int genotypeLength, int phenoTypeLength,
                                     String[] geneExprBag,
                                     List<City> baseOrder,

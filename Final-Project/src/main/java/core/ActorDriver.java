@@ -1,15 +1,13 @@
 package core;
 
 import actors.MasterActor;
-import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import model.City;
 import org.apache.log4j.Logger;
-import udf.Trifunction;
+import udf.TriFunction;
 import udf.UserDefinedFunction;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +23,22 @@ public class ActorDriver {
 
     final static Logger logger = Logger.getLogger(ActorDriver.class);
 
+
+    /*
+    * Driver program that initializes the Actor System.
+    * Additionally, the actor system, spawns a single
+    * Master Actor which is initialized with init parameters
+    * needed by the MasterActor and Child actors
+     * (WorkerActor spawned from the MasterActor.)
+    *
+    *
+    * */
     public static void main(String[] args) throws Exception {
 
 
         String[] geneExprBag = {"A","B"};
         int phenoTypeLength = 6;
-        int populationSize = (6 * 5  * 3 * 2);
+        int populationSize = (6 * 5 * 3 * 2);
         int genoTypeLength = 6;
         double cutoff = 0.2;
 
@@ -57,6 +65,12 @@ public class ActorDriver {
     }
 
 
+    /*
+    *
+    * Creates random city objects. The total number of city
+    * objects created equals the phenoTypeLength
+    *
+    * */
     public static List<City> getBaseOrder(int phenoTypeLength) {
         Random r = new Random();
         double min = -100;
@@ -72,13 +86,19 @@ public class ActorDriver {
 
     }
 
-
+    /*
+    *
+    * Creates a map of a gene sequence element which is mapped
+    * to a lambda function. The lambda function applies the
+    * shifting operation on the list and returns the new list.
+    *
+    * */
 
     public static Map<String, UserDefinedFunction> getGeneExprMapping() {
 
         Map<String, UserDefinedFunction> geneExprMapping = new HashMap<>();
 
-        Trifunction<List<City>, Integer, Integer, List<City>> geneExprA = (newList, a, b) -> {
+        TriFunction<List<City>, Integer, Integer, List<City>> geneExprA = (newList, a, b) -> {
             int indexToSwapWith = (a + 3 ) % newList.size();
             City temp = newList.get(b);
             newList.set(b, newList.get(indexToSwapWith));
@@ -88,7 +108,7 @@ public class ActorDriver {
 
 
 
-        Trifunction<List<City>, Integer, Integer, List<City>> geneExprB = (newList, a, b) -> {
+        TriFunction<List<City>, Integer, Integer, List<City>> geneExprB = (newList, a, b) -> {
             int indexToSwapWith = (b + 7 ) % newList.size();
             City temp = newList.get(a);
             newList.set(a, newList.get(indexToSwapWith));
