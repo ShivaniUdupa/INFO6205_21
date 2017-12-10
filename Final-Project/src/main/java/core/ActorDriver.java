@@ -1,9 +1,11 @@
 package core;
 
 import actors.MasterActor;
+import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import model.City;
+import org.apache.log4j.Logger;
 import udf.Trifunction;
 import udf.UserDefinedFunction;
 
@@ -21,6 +23,8 @@ import java.util.stream.IntStream;
  */
 public class ActorDriver {
 
+    final static Logger logger = Logger.getLogger(ActorDriver.class);
+
     public static void main(String[] args) throws Exception {
 
 
@@ -34,8 +38,13 @@ public class ActorDriver {
         List<City> baseOrder = getBaseOrder(phenoTypeLength);
         int stopGeneration = 10;
 
-
-        final ActorSystem system = ActorSystem.create("GaSystem");
+        logger.debug("======================================");
+        logger.info("Parameters <Phenotype Length :" + phenoTypeLength + ">" +
+                "<Population Size :" + populationSize +
+                ">" + "<Genotype Length :" + genoTypeLength + ">" +
+        "< Culling Cutoff :" + cutoff + ">");
+        logger.debug("======================================");
+        final ActorSystem system = ActorSystem.create("GA-System");
 
         final ActorRef masterActor =
                 system.actorOf(MasterActor.props(
@@ -44,8 +53,6 @@ public class ActorDriver {
                         "MasterActor");
 
         masterActor.tell(new MasterActor.Init(), ActorRef.noSender());
-
-
 
     }
 

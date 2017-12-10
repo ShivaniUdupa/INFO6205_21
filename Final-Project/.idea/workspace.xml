@@ -28,11 +28,23 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MasterActor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MasterActor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/actors/MasterActor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="151" column="104" lean-forward="false" selection-start-line="151" selection-start-column="93" selection-end-line="151" selection-end-column="104" />
+            <state relative-caret-position="1887">
+              <caret line="197" column="12" lean-forward="true" selection-start-line="197" selection-start-column="12" selection-end-line="197" selection-end-column="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActorDriver.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/core/ActorDriver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="332">
+              <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -53,8 +65,8 @@
       <file leaf-file-name="WorkerActor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/actors/WorkerActor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="90" column="63" lean-forward="false" selection-start-line="90" selection-start-column="59" selection-end-line="90" selection-end-column="63" />
+            <state relative-caret-position="62">
+              <caret line="199" column="20" lean-forward="false" selection-start-line="199" selection-start-column="20" selection-end-line="199" selection-end-column="20" />
               <folding>
                 <element signature="e#467#468#0" expanded="true" />
                 <element signature="e#546#547#0" expanded="true" />
@@ -92,8 +104,8 @@
       <find>CreateGenotype</find>
       <find>RegenerateGenotype</find>
       <find>Result.clas</find>
-      <find>self</find>
       <find>Generation-</find>
+      <find>self</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -116,11 +128,11 @@
         <option value="$PROJECT_DIR$/src/test/java/model/GenotypeTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/model/CityTest.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/core/ActorDriver.java" />
         <option value="$PROJECT_DIR$/src/main/java/actors/LogActor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/actors/WorkerActor.java" />
         <option value="$PROJECT_DIR$/src/main/resources/log4j.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/actors/WorkerActor.java" />
         <option value="$PROJECT_DIR$/src/main/java/actors/MasterActor.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/ActorDriver.java" />
       </list>
     </option>
   </component>
@@ -1014,16 +1026,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/ActorDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="43">
-          <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -1060,8 +1062,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/actors/WorkerActor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="90" column="63" lean-forward="false" selection-start-line="90" selection-start-column="59" selection-end-line="90" selection-end-column="63" />
+        <state relative-caret-position="62">
+          <caret line="199" column="20" lean-forward="false" selection-start-line="199" selection-start-column="20" selection-end-line="199" selection-end-column="20" />
           <folding>
             <element signature="e#467#468#0" expanded="true" />
             <element signature="e#546#547#0" expanded="true" />
@@ -1071,8 +1073,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/actors/MasterActor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="151" column="104" lean-forward="false" selection-start-line="151" selection-start-column="93" selection-end-line="151" selection-end-column="104" />
+        <state relative-caret-position="1887">
+          <caret line="197" column="12" lean-forward="true" selection-start-line="197" selection-start-column="12" selection-end-line="197" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/ActorDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

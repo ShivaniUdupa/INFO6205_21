@@ -102,11 +102,14 @@ public class MasterActor extends AbstractActor {
     private void executeResultLogic(Genotype genotype) {
             this.resultGenotypes.add(genotype);
             if(this.resultGenotypes.size() == this.populationSize) {
+                logger.debug("======================================");
                 logger.info("All Results received for generation :" + this.currentGeneration);
+                logger.debug("======================================");
                 Collections.sort(this.resultGenotypes, this.genoTypeComparator);
                 logger.info("Sorting Results for generation " + this.currentGeneration);
+                logger.debug("======================================");
                 logger.info("Generation " +this.currentGeneration  + " best distance computed :" + this.resultGenotypes.get(0).getPhenotype().getDistance());
-
+                logger.debug("======================================");
                 this.currentGeneration++;
                 if(this.currentGeneration <= this.stopGeneration) {
                     // spawn and regn
@@ -126,7 +129,9 @@ public class MasterActor extends AbstractActor {
 
 
                 } else {
+                    logger.debug("======================================");
                     logger.info("Completed Time to terminate");
+                    logger.debug("======================================");
 
                     context().stop(getSelf());
                     context().system().terminate();
@@ -144,7 +149,9 @@ public class MasterActor extends AbstractActor {
             Map<String, UserDefinedFunction> geneExprMapping,
             int phenoTypeLength,
             List<City> baseOrder) {
+        logger.debug("======================================");
         logger.info("Executing Regeneration for generation :" + this.currentGeneration);
+        logger.debug("======================================");
         IntStream.range(0, this.populationSize)
                 .forEach(index -> {
                     List<City> newBaseOrder = new ArrayList<>();
@@ -167,7 +174,9 @@ public class MasterActor extends AbstractActor {
     }
 
     private void executeInitLogic() {
+        logger.debug("======================================");
         logger.info("Spawning Children for creating Generation 0");
+        logger.debug("======================================");
         IntStream.range(0, this.populationSize)
                 .forEach(index -> {
 
@@ -194,11 +203,10 @@ public class MasterActor extends AbstractActor {
             double fitnessA = gA.getPhenotype().getFitnessScore();
             double fitnessB = gB.getPhenotype().getFitnessScore();
 
-            //ascending order
+
             return gB.compareTo(gA);
 
-            //descending order
-            //return fruitName2.compareTo(fruitName1);
+
         }
 
     };
