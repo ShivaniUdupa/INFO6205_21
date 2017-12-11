@@ -4,11 +4,19 @@ Solving the "Traveling Salesproblem Problem" using  genetic algorithm
 
 
 
-STEPS FOR RUNNING :
-
-
-
-##########################################################
+A. STEPS FOR RUNNING :
 1. mvn clean install (Have Maven and Java preinstalled)
 2. java -jar ./target/final-project-1.0-SNAPSHOT.jar
-##########################################################
+
+
+
+B. LINK TO PRESENTATION :
+https://github.com/ShivaniUdupa/INFO6205_21/tree/master/Final-Presentation
+
+
+
+C. LINK TO PROJECT :
+https://github.com/ShivaniUdupa/INFO6205_21/tree/master/Final-Project
+
+
+
